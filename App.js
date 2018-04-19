@@ -14,15 +14,21 @@ import {
 } from 'react-native';
 import pxToDp from './src/js/pxToDp';
 import Home from './src/components/Home';
+import Community from './src/components/Community';
+import Vip from './src/components/Vip';
+import My from './src/components/My';
+import Cart from './src/components/Cart';
+import Order from './src/components/Order';
 import TabNavigator from 'react-native-tab-navigator';
 import { StackNavigator } from 'react-navigation';
-
+import store from './src/store/index'
+global.url="http://192.168.0.97:94"
 type Props = {};
 class HomeScreen extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTab: 'index'
+      selectedTab: 'my'
     }
   }
   static navigationOptions = {
@@ -51,7 +57,7 @@ class HomeScreen extends Component<Props> {
                   renderSelectedIcon={() => <Image style={styles.menuImg2} source={require('./src/images/menu1.png')} />}
                   onPress={() => this.setState({ selectedTab: 'payment' })}
                   >
-                  <Home navigation={this.props.navigation} />
+                  <Community navigation={this.props.navigation} />
               </TabNavigator.Item>
               <TabNavigator.Item
                   selected={this.state.selectedTab === 'shoppingCart'}
@@ -61,7 +67,7 @@ class HomeScreen extends Component<Props> {
                   renderIcon={() => <Image style={styles.menuImg3} source={require('./src/images/menu1.png')} />}
                   renderSelectedIcon={() => <Image style={styles.menuImg3} source={require('./src/images/menu1.png')} />}
                   onPress={() => this.setState({ selectedTab: 'shoppingCart' })}>
-                 <Home navigation={this.props.navigation}  />
+                 <Vip navigation={this.props.navigation}  />
               </TabNavigator.Item>
             <TabNavigator.Item
                 selected={this.state.selectedTab === 'my'}
@@ -71,20 +77,46 @@ class HomeScreen extends Component<Props> {
                 renderIcon={() => <Image style={styles.menuImg4} source={require('./src/images/menu1.png')} />}
                 renderSelectedIcon={() => <Image style={styles.menuImg4} source={require('./src/images/menu1.png')} />}
                 onPress={() => this.setState({ selectedTab: 'my' })}>
-                <Home  navigation={this.props.navigation} />
+                <My  navigation={this.props.navigation} />
             </TabNavigator.Item>
          </TabNavigator>
     );
   }
 }
+class CartScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <Cart navigation={this.props.navigation} />
+    );
+  }
+}
+class OrderScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <Order navigation={this.props.navigation} />
+    );
+  }
+}
 const RootNavigator = StackNavigator({
+  Order: {
+    screen: OrderScreen,
+  },
+  Cart: {
+    screen: CartScreen,
+  },
   Home: {
     screen: HomeScreen,
   },
 });
 export default class App extends React.Component {
   render() {
-    return <RootNavigator />;
+    return <RootNavigator store={store} />;
   }
 }
 const styles = StyleSheet.create({

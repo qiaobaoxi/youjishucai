@@ -6,6 +6,11 @@
 
 import React, { Component } from 'react';
 import Swiper from 'react-native-swiper';
+import types from '../actions/shopingCart'
+import store from '../store/index'
+import Fetch from '../js/fetch'
+import AwesomeAlert from 'react-native-awesome-alerts';
+import PopupDialog from 'react-native-popup-dialog';
 import {
   Platform,
   StyleSheet,
@@ -21,12 +26,13 @@ import {
   PanResponder,
   Animated,
   Easing,
-  ImageBackground 
+  ImageBackground,
+  Alert,
+  Button
 } from 'react-native';
 import pxToDp from '../js/pxToDp';
 const deviceHeightDp = Dimensions.get('window').height;
 const deviceWidthDp = Dimensions.get('window').width;
-
 function scrrollHeight(uiElementHeight) {
   return deviceHeightDp-uiElementHeight;
 }
@@ -42,33 +48,89 @@ export default class Home extends Component<Props> {
       rowHasChanged: (r1, r2) => r1 !== r2,
       sectionHeaderHasChanged:(s1,s2)=>r1 !== r2,
     });
+    //初始化
     this.state = {
-      LeftdataSource: type1.cloneWithRows([{active:true,name:'有机蔬菜'},{active:false,name:'粮油禽蛋'},{active:false,name:'有机蔬菜'},{active:true,name:'有机蔬菜'},{active:false,name:'粮油禽蛋'},{active:false,name:'有机蔬菜'},]),
-      RightdataSource: type2.cloneWithRows([{
-        img: 'http://img05.tooopen.com/images/20140328/sy_57865838889.jpg',
-        name: '有机青椒500G',
-        money: 15.9,
-        company: '袋',
-        isNull:false
-      },{
-        img: 'http://img05.tooopen.com/images/20140328/sy_57865838889.jpg',
-        name: '有机青椒500G',
-        money: 15.9,
-        company: '袋',
-        isNull:false
-      },{
-        img: 'http://img05.tooopen.com/images/20140328/sy_57865838889.jpg',
-        name: '有机青椒500G',
-        money: 15.9,
-        company: '袋',
-        isNull:false
-        }]),
+      showAlert: false,
+      isBullet: false,
+      bulletMessage: '我的世界',
+      LeftdataSource: type1.cloneWithRows([]),
+      RightdataSource: type2.cloneWithRows([]),
       selectName: '有机蔬菜',
       right: new Animated.Value(10),
       top: new Animated.Value(10),
-      fadeAnim: new Animated.Value(0)
+      fadeAnim: new Animated.Value(0),
+      cartNum: store.getState().count,
+      message: '',
+      rightGoods:[]
     }
-   
+    //菜单获取
+    let manuUrl=global.url + '/api/home/initSgHome'
+    Fetch(manuUrl, "post", {}, (responseData) => { 
+      if (typeof responseData == 'object') {
+        let LeftdataSource = responseData.data.map((item, index) => {
+          let json = {
+            active: false,
+            name: item.name
+          }
+          if (index === 0) {
+            json.active = true;
+          }
+          return json
+        })
+        let rightGoods = responseData.data.map((item, index) => {
+          let array = [];
+          let i = 0;
+          for (i = 0; i < item.categorys.length;i++) { 
+            let json = {
+              id:item.categorys[i].id,
+              img: item.categorys[i].img,
+              name:item.categorys[i].name,
+              money: item.categorys[i].id,
+              company: '袋',
+              isNull:false
+            }
+            array[i] = json;
+          }
+          return array;
+        })
+        this.setState({ LeftdataSource: type1.cloneWithRows(LeftdataSource), rightGoods: rightGoods, RightdataSource: type2.cloneWithRows(rightGoods[0]) }, () => { 
+          this.popupDialog.show(() => {
+            console.log('callback - will be called immediately')
+          });
+        })
+      } else { 
+        this.setState({ message: "数据格式不对或者出错" });
+        this.showAlert()
+      }
+    }, (err) => { 
+      this.setState({message: error.toString()})
+      this.showAlert()
+      })
+  }
+  showAlert = () => {
+    this.setState({
+      showAlert: true
+    });
+  }
+  showBullet = () => {
+    this.setState({
+      isBullet: true
+    });
+  }
+  hideBullet = () => {
+    this.setState({
+      isBullet: false
+    });
+  }
+  hideAlert = () => {
+    this.setState({
+      showAlert: false
+    });
+  }
+  onButtonPress() {
+    this.popupDialog.dismiss(() => {
+      console.log('callback - will be called immediately')
+    });
   }
   componentWillMount() {
     this._panResponder = PanResponder.create({
@@ -77,10 +139,12 @@ export default class Home extends Component<Props> {
       onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
       onMoveShouldSetPanResponder: (evt, gestureState) => true,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-
       onPanResponderGrant: (evt, gestureState) => {
+        store.dispatch({ type: types.reduceShopingNum.REDUCENUM})
         this.setState({ right: new Animated.Value(deviceWidthDp-evt.nativeEvent.pageX-pxToDp(45/2)), top: new Animated.Value(evt.nativeEvent.pageY-pxToDp(45/2)) }, () => { 
           this.animate();
+          // this.showAlert();
+          this.setState({cartNum: store.getState().count, message: "数据格式不对或者出错" })
         })
       },
       onPanResponderMove: (evt, gestureState) => {
@@ -137,6 +201,10 @@ export default class Home extends Component<Props> {
 }
   //点击1级菜单
   goods1NameFn(dataSource, rowID) {
+    let type2 = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+      sectionHeaderHasChanged:(s1,s2)=>r1 !== r2,
+    });
     let name=""
     for(let i=0;i<dataSource._dataBlob.s1.length;i++){
         if (i == rowID) {
@@ -147,7 +215,7 @@ export default class Home extends Component<Props> {
         }
     }
     var newTabs = JSON.parse(JSON.stringify(dataSource._dataBlob.s1));
-    this.setState({LeftdataSource:this.state.LeftdataSource.cloneWithRows(newTabs),selectName:name})
+    this.setState({LeftdataSource:this.state.LeftdataSource.cloneWithRows(newTabs),selectName:name,RightdataSource:type2.cloneWithRows(this.state.rightGoods[rowID])})
   }
   //一级菜单的list渲染
   _renderRow1(rowData, sectionID, rowID) {
@@ -176,6 +244,7 @@ export default class Home extends Component<Props> {
     );
   }
   render() {
+    const { showAlert, message, isBullet, bulletMessage } = this.state;
     return (
       <View style={styles.contenier}>  
         <ImageBackground style={styles.header} source={require('../images/headerBackground.png')} resizeMode='cover'>
@@ -195,11 +264,11 @@ export default class Home extends Component<Props> {
           </View>
           <TouchableOpacity style={styles.cartBtn}>
             <Image style={styles.cartImg} source={require("../images/cart.png")}></Image>
-            <View style={styles.cartNumWrap}><Text style={styles.cartNum}>10</Text></View>
+            <View style={styles.cartNumWrap}><Text style={styles.cartNum}>{this.state.cartNum}</Text></View>
           </TouchableOpacity>  
         </ImageBackground>
         <View style={styles.wrapperWrap}>
-          <Swiper style={styles.wrapper} paginationStyle={styles.pagination} activeDot={<View style={{backgroundColor:'#007aff', width: 20, height: 5,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />} dot={<View style={{backgroundColor:'white', width: 20, height: 5,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}  autoplay={true} >
+          <Swiper style={styles.wrapper}  activeDot={<View style={{backgroundColor:'#007aff', width: 20, height: 5,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />} dot={<View style={{backgroundColor:'white', width: 20, height: 5,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}  autoplay={true} >
             <View style={styles.slide}>
               <Image style={styles.banner} source={require("../images/banner1.jpg")}></Image>
             </View>
@@ -238,7 +307,44 @@ export default class Home extends Component<Props> {
             top: this.state.top,
           }}
         >
-      </Animated.View>
+        </Animated.View>
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          message={message}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="知道了"
+          confirmButtonColor="#DD6B55"
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
+        <PopupDialog
+          width={pxToDp(600)} 
+          height={pxToDp(692)} 
+            ref={(popupDialog) => { this.popupDialog = popupDialog; }}
+          >
+            <View>
+              <Image style={styles.bulletImage} resizeMode="stretch" source={require("../images/bullet.png")}></Image>
+            </View>
+          <View style={styles.bullet}>
+            <View style={styles.bulletTitle}><Text style={styles.bulletTitleText}>消息通知</Text></View>  
+            <View style={styles.bulletContent}><Text style={styles.bulletContentText}>为了让公司员工过一个欢乐祥和的
+              五一劳动节，现将我司放假时间通
+              知如下：2018年4月29日至2018年
+              5月1日放假，共3天（届时3天内订
+              单将统一在2018年5月2日正式上班
+              安排发出，敬请谅解.</Text>
+            </View>
+            <TouchableOpacity style={styles.button} onPress={this.onButtonPress.bind(this)}>
+              <Text
+              style={styles.buttonText}  
+              >知道了</Text>
+            </TouchableOpacity>
+          </View>
+        </PopupDialog>
       </View>
     );
   }
@@ -272,14 +378,14 @@ const styles = StyleSheet.create({
     paddingLeft: pxToDp(12),
     paddingRight: pxToDp(12),
     height: pxToDp(100),
-    backgroundColor:'#ff8b00'
+    backgroundColor: '#ff8b00'
   },
   customerServiceBtn: {
     flexDirection: 'row',
     width: pxToDp(86),
     height: pxToDp(64),
     alignItems: "center",
-    justifyContent:"center",
+    justifyContent: "center",
   },
   customerServiceImg: {
     width: pxToDp(45),
@@ -287,7 +393,7 @@ const styles = StyleSheet.create({
   },
   headerSearchWrap: {
     position: "relative",
-    flex:1,
+    flex: 1,
     justifyContent: "center",
   },
   headerSearchImg: {
@@ -299,20 +405,20 @@ const styles = StyleSheet.create({
     height: pxToDp(36)
   },
   headerSearch: {
-    borderColor: '#ececec', 
+    borderColor: '#ececec',
     borderWidth: 1,
-    borderRadius:36,
-    backgroundColor:"#eeeeee",
-    height:"100%",
+    borderRadius: 36,
+    backgroundColor: "#eeeeee",
+    height: "100%",
     paddingLeft: pxToDp(74),
   },
   cartBtn: {
-    position:'relative',
+    position: 'relative',
     flexDirection: 'row',
     width: pxToDp(86),
     height: pxToDp(64),
     alignItems: "center",
-    justifyContent:"center",
+    justifyContent: "center",
   },
   cartImg: {
     width: pxToDp(52),
@@ -339,7 +445,7 @@ const styles = StyleSheet.create({
     bottom: pxToDp(10)
   },
   goodsWrap: {
-    flexDirection:'row',
+    flexDirection: 'row',
     backgroundColor: '#f4f4f4'
   },
   goods1: {
@@ -353,7 +459,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: pxToDp(1),
     borderBottomColor: '#daddde',
     backgroundColor: '#f4f4f4',
-    position:'relative',
+    position: 'relative',
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -370,25 +476,25 @@ const styles = StyleSheet.create({
   goods1NameActive: {
     backgroundColor: 'white',
   },
-  goods1NameTextLine:{
-    position:'absolute',
+  goods1NameTextLine: {
+    position: 'absolute',
     left: 0,
     top: 0,
-    width:pxToDp(6),
-    height:'100%',
+    width: pxToDp(6),
+    height: '100%',
     backgroundColor: '#11b57c',
   },
-  goods1NameTextLine1:{
-    position:'absolute',
+  goods1NameTextLine1: {
+    position: 'absolute',
     left: 0,
     top: 0,
-    width:pxToDp(6),
-    height:'100%',
-    backgroundColor:'white',
+    width: pxToDp(6),
+    height: '100%',
+    backgroundColor: 'white',
   },
-  goods2:{
-    width:pxToDp(576),
-    height:scrrollHeight(242),
+  goods2: {
+    width: pxToDp(576),
+    height: scrrollHeight(242),
     paddingLeft: pxToDp(24),
     backgroundColor: "white",
   },
@@ -411,19 +517,19 @@ const styles = StyleSheet.create({
     height: pxToDp(25)
   },
   goods2Bnner: {
-    width:pxToDp(526),
-    height:pxToDp(200),
+    width: pxToDp(526),
+    height: pxToDp(200),
     marginTop: pxToDp(28)
   },
   goods3: {
     flexDirection: 'row',
-    flexWrap:'wrap'
+    flexWrap: 'wrap'
   },
   rowGoods: {
     marginRight: pxToDp(8),
     width: pxToDp(268),
     borderWidth: pxToDp(2),
-    borderColor: '#f4f4f4', 
+    borderColor: '#f4f4f4',
   },
   rowGoodsImg: {
     width: '100%',
@@ -468,5 +574,41 @@ const styles = StyleSheet.create({
   rowGoodsAddImg: {
     width: pxToDp(45),
     height: pxToDp(45)
+  },
+  bullet: {
+    alignItems: 'center'
+  },
+  bulletImage: {
+    width: "100%",
+    height: pxToDp(120)
+  },
+  bulletTitle: {
+    marginTop: pxToDp(64),
+    marginBottom: pxToDp(10),
+    alignItems: "center"
+  },
+  bulletTitleText: {
+    fontSize: pxToDp(40),
+    color: "#333335"
+  },
+  bulletContent: {
+    width: pxToDp(430)
+  },
+  bulletContentText: {
+    fontSize: pxToDp(28),
+    color: '#99979a'
+  },
+  button: {
+    marginTop: pxToDp(60),
+    marginBottom: pxToDp(50),
+    width: pxToDp(334),
+    height: pxToDp(84),
+    borderRadius: pxToDp(30),
+    backgroundColor: "#2abd89",
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  buttonText: {
+    color: "white"
   }
 });
