@@ -51,17 +51,18 @@ export default class Vip extends Component<Props> {
       rowHasChanged: (r1, r2) => r1 !== r2,
       sectionHeaderHasChanged:(s1,s2)=>r1 !== r2,
     });
+    this.state={isVip:false}
   }
   render() {
+    const {isVip} = this.state
     return (
       <View style={styles.contenier}>  
           <Header name="VIP会员"></Header>
-            <ScrollView contentContainerStyle={styles.scroll}>
-             <View style={styles.vipInfo}>      
+          <ScrollView contentContainerStyle={isVip?styles.scroll:styles.hidden}>
+            <View style={styles.vipInfo}>      
               <ImageBackground style={styles.vipBackground} source={require('../images/vipBackground.png')} resizeMode='cover'>
                 <View style={styles.vipImages}>
-                  <Image style={styles.vipHeadportait} source={require('../images/gongxiangzhijia.png')}></Image>
-                  <Image style={styles.vip} source={require('../images/vip.png')}></Image>      
+                  <Image style={styles.vipHeadportait} source={require('../images/vip.png')}></Image>      
                 </View>
                 <View style={styles.vipNameAndCard}>
                   <View style={styles.vipName}><Text style={styles.vipNameText1}>会员：</Text><Text style={styles.vipNameText1}>张三丰</Text></View>
@@ -93,13 +94,65 @@ export default class Vip extends Component<Props> {
                 </Text>             
               </View>          
             </View>        
-          </ScrollView>        
+          </ScrollView>
+          <ScrollView contentContainerStyle={styles.scroll}>
+            <View style={styles.vipInfo}>      
+              <ImageBackground style={styles.vipBackground} source={require('../images/vipBackground.png')} resizeMode='cover'>
+                <View style={styles.vipImages}>
+                  <Image style={styles.vipHeadportait} source={require('../images/noVip.png')}></Image>      
+                </View>
+                <View style={styles.vipNameAndCard}>
+                  <View style={styles.vipName}><Text style={styles.vipNameText1}>成为vip会员</Text></View>
+                  <View style={styles.vipCard}><Text style={styles.vipNameText1}>需要缴纳2000元/年的年费</Text></View>      
+                </View>         
+              </ImageBackground>
+              <View style={styles.vipFuns}>
+                <View style={styles.vipFunItem}>
+                  <View style={styles.vipFunItemImgWrap}><Image style={styles.vipFunItemImg} source={require('../images/vipFun.png')}></Image></View>
+                  <View><Text style={styles.vipFunItemText}>商城9折</Text></View>
+                </View>
+                <View style={styles.vipFunItem}>
+                  <View style={styles.vipFunItemImgWrap}><Image style={styles.vipFunItemImg} source={require('../images/vipFun.png')}></Image></View>
+                  <View><Text style={styles.vipFunItemText}>专享客服</Text></View>
+                </View>
+                <View style={styles.vipFunItem}>
+                  <View style={styles.vipFunItemImgWrap}><Image style={styles.vipFunItemImg} source={require('../images/vipFun.png')}></Image></View>
+                  <View><Text style={styles.vipFunItemText}>xxxx</Text></View>
+                </View>
+                <View style={styles.vipFunItem}>
+                  <View style={styles.vipFunItemImgWrap}><Image style={styles.vipFunItemImg} source={require('../images/vipFun.png')}></Image></View>
+                  <View><Text style={styles.vipFunItemText}>xxxx</Text></View>
+                </View>
+              </View>
+              <TouchableOpacity style={styles.openVipBtn}>
+                <Text style={styles.openVipBtnText}>开通VIP会员</Text>
+              </TouchableOpacity>        
+            </View>
+            <View style={styles.warn}>
+              <View style={styles.warnTitle}><Image style={styles.warnImg1} source={require('../images/bubbleLeft1.png')}></Image><Text style={styles.warnText}>vip会员权益</Text><Image style={styles.warnImg2} source={require('../images/bubbleRight1.png')}></Image></View>          
+              <View style={styles.warnContent}>
+                <Text style={styles.warnContentText}>
+                •vip会员在app和门店购买活动范围内的商品时，可享受
+                实付金额（不包含运费、用券等促销折扣部分）2%的返
+                利，返利以现金形式返还。
+                </Text>
+                <Text style={styles.warnContentText}>
+                •vip会员在app和门店购买活动范围内的商品时，可享受
+                实付金额（不包含运费、用券等促销折扣部分）2%的返
+                利，返利以现金形式返还。
+                </Text>              
+              </View>          
+            </View>         
+          </ScrollView>          
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  hidden:{
+    display: 'none'
+  },
   contenier: {
     width: '100%',
     height: '100%'
@@ -230,5 +283,40 @@ const styles = StyleSheet.create({
     lineHeight: pxToDp(44),
     fontSize: pxToDp(24),
     color: '#909090'
+  },
+  vipFuns:{
+    flexDirection: 'row',
+    paddingLeft: pxToDp(8),
+    paddingRight: pxToDp(8)
+  },
+  vipFunItem:{
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  vipFunItemImg:{
+    width: pxToDp(68),
+    height: pxToDp(68),
+  },
+  vipFunItemImgWrap:{
+    marginBottom: pxToDp(20)
+  },
+  vipFunItemText: {
+    fontSize: pxToDp(28),
+    color: '#818181'
+  },
+  openVipBtn:{
+    marginLeft: pxToDp(32),
+    marginRight: pxToDp(32),
+    flex: 1,
+    height: pxToDp(86),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ff0036',
+    borderRadius: pxToDp(30)
+  },
+  openVipBtnText: {
+    color: 'white',
+    fontSize: pxToDp(32)
   }
 });

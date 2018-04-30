@@ -16,9 +16,14 @@ import pxToDp from './src/js/pxToDp';
 import Home from './src/components/Home';
 import Community from './src/components/Community';
 import Vip from './src/components/Vip';
+import PayToVip from './src/components/PayToVip';
+import SearchGoods from './src/components/SearchGoods';
 import My from './src/components/My';
 import Cart from './src/components/Cart';
 import Order from './src/components/Order';
+import MyOrder from './src/components/MyOrder';
+import UserAddress from './src/components/UserAddress';
+import VipRegister from './src/components/VipRegister';
 import TabNavigator from 'react-native-tab-navigator';
 import { StackNavigator } from 'react-navigation';
 import store from './src/store/index'
@@ -28,7 +33,7 @@ class HomeScreen extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTab: 'my'
+      selectedTab: 'shoppingCart'
     }
   }
   static navigationOptions = {
@@ -83,6 +88,36 @@ class HomeScreen extends Component<Props> {
     );
   }
 }
+class MyOrderScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <MyOrder navigation={this.props.navigation} />
+    );
+  }
+}
+class SearchGoodsScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <SearchGoods navigation={this.props.navigation} />
+    );
+  }
+}
+class UserAddressScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <UserAddress navigation={this.props.navigation} />
+    );
+  }
+}
 class CartScreen extends Component<Props> { 
   static navigationOptions = {
     header:null
@@ -103,15 +138,50 @@ class OrderScreen extends Component<Props> {
     );
   }
 }
+class VipRegisterScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <VipRegister navigation={this.props.navigation} />
+    );
+  }
+}
+class PayToVipScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <PayToVip navigation={this.props.navigation} />
+    );
+  }
+}
 const RootNavigator = StackNavigator({
+  MyOrder: {
+    screen: MyOrderScreen,
+  },
+  UserAddress: {
+    screen: UserAddressScreen,
+  },
+  SearchGoods: {
+    screen: SearchGoodsScreen,
+  },
+  PayToVip: {
+    screen: PayToVipScreen,
+  },
+  VipRegister: {
+    screen: VipRegisterScreen,
+  },
+  Home: {
+    screen: HomeScreen,
+  },
   Order: {
     screen: OrderScreen,
   },
   Cart: {
     screen: CartScreen,
-  },
-  Home: {
-    screen: HomeScreen,
   },
 });
 export default class App extends React.Component {

@@ -73,19 +73,6 @@ export default class Community extends Component<Props> {
     return (
       <View style={styles.contenier}>  
         <Header name="正弘新社群"></Header>
-        <View style={styles.wrapperWrap}>
-          <Swiper style={styles.wrapper}  activeDot={<View style={{backgroundColor:'#007aff', width: 20, height: 5,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />} dot={<View style={{backgroundColor:'white', width: 20, height: 5,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}  autoplay={true} >
-            <View style={styles.slide}>
-              <Image style={styles.banner} source={require("../images/banner1.jpg")}></Image>
-            </View>
-            <View style={styles.slide}>
-              <Image style={styles.banner} source={require("../images/banner1.jpg")}></Image>
-            </View>
-            <View style={styles.slide}>
-              <Image style={styles.banner} source={require("../images/banner1.jpg")}></Image>
-            </View>
-          </Swiper>
-        </View>
         <View style={styles.menuTypes}>
           <TouchableOpacity style={styles.menuItem} onPress={() => { 
             this.swipeMenu(0)
@@ -184,13 +171,6 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: pxToDp(36),
     color: "white"
-  },
-  wrapperWrap: {
-    height: pxToDp(238)
-  },
-  banner: {
-    width: '100%',
-    height: '100%'
   },
   menuTypes: {
     flexDirection: 'row',
