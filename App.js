@@ -19,9 +19,11 @@ import Vip from './src/components/Vip';
 import PayToVip from './src/components/PayToVip';
 import SearchGoods from './src/components/SearchGoods';
 import My from './src/components/My';
+import PayFun from './src/components/PayFun';
 import Cart from './src/components/Cart';
 import Order from './src/components/Order';
 import MyOrder from './src/components/MyOrder';
+import AllOrder from './src/components/AllOrder';
 import UserAddress from './src/components/UserAddress';
 import VipRegister from './src/components/VipRegister';
 import TabNavigator from 'react-native-tab-navigator';
@@ -88,6 +90,16 @@ class HomeScreen extends Component<Props> {
     );
   }
 }
+class AllOrderScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <AllOrder navigation={this.props.navigation} />
+    );
+  }
+}
 class MyOrderScreen extends Component<Props> { 
   static navigationOptions = {
     header:null
@@ -95,6 +107,16 @@ class MyOrderScreen extends Component<Props> {
   render() {
     return (
       <MyOrder navigation={this.props.navigation} />
+    );
+  }
+}
+class PayFunScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <PayFun navigation={this.props.navigation} />
     );
   }
 }
@@ -158,7 +180,14 @@ class PayToVipScreen extends Component<Props> {
     );
   }
 }
+
 const RootNavigator = StackNavigator({
+  AllOrder: {
+    screen: AllOrderScreen,
+  },
+  PayFun: {
+    screen: PayFunScreen,
+  },
   MyOrder: {
     screen: MyOrderScreen,
   },
