@@ -5,23 +5,30 @@
  */
 
 import React, { Component } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  Image
-} from 'react-native';
+
 import pxToDp from './src/js/pxToDp';
-import Home from './src/components/Home';
 import Community from './src/components/Community';
 import Vip from './src/components/Vip';
 import PayToVip from './src/components/PayToVip';
+import Message from './src/components/Message';
 import SearchGoods from './src/components/SearchGoods';
 import My from './src/components/My';
+import Person from './src/components/Person';
+import Name from './src/components/Name';
+import Index from './src/components/Index';
+import AccountSecurity from './src/components/AccountSecurity';
+import ModifyPassword from './src/components/ModifyPassword';
+import MessageDetail from './src/components/MessageDetail';
+import ServiceCenter from './src/components/ServiceCenter';
+import Register from './src/components/Register';
+import Register1 from './src/components/Register1';
+import NewPassword from './src/components/NewPassword';
 import PayFun from './src/components/PayFun';
 import Cart from './src/components/Cart';
 import Order from './src/components/Order';
+import Set from './src/components/Set';
+import SignIn from './src/components/SignIn';
+import GoodsDetail from './src/components/GoodsDetail';
 import MyOrder from './src/components/MyOrder';
 import AllOrder from './src/components/AllOrder';
 import UserAddress from './src/components/UserAddress';
@@ -29,64 +36,134 @@ import VipRegister from './src/components/VipRegister';
 import TabNavigator from 'react-native-tab-navigator';
 import { StackNavigator } from 'react-navigation';
 import store from './src/store/index'
-global.url="http://192.168.0.97:94"
 type Props = {};
-class HomeScreen extends Component<Props> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedTab: 'shoppingCart'
-    }
-  }
+class NewPasswordScreen extends Component<Props> { 
   static navigationOptions = {
     header:null
   };
   render() {
     return (
-      <TabNavigator tabBarStyle={{backgroundColor:'white',height: pxToDp(114),alignItems: 'center'}}>
-              <TabNavigator.Item
-                  selected={this.state.selectedTab === 'index'}
-                  title="有机蔬菜"
-                  tabStyle={{color:'white'}}
-                  titleStyle={{color:'#999'}}
-                  selectedTitleStyle={{color:'#01d6c2'}}
-                  renderIcon={() => <Image style={styles.menuImg1} source={require('./src/images/menu1.png')} />}
-                  renderSelectedIcon={() => <Image style={styles.menuImg1} source={require('./src/images/menu1.png')} />}
-                  onPress={() => this.setState({ selectedTab: 'index' })}>
-                  <Home  navigation={this.props.navigation}/>
-              </TabNavigator.Item>
-              <TabNavigator.Item
-                  selected={this.state.selectedTab === 'payment'}
-                  title="正弘新社群"
-                  titleStyle={{color:'#999'}}
-                  selectedTitleStyle={{color:'#01d6c2'}}
-                  renderIcon={() => <Image style={styles.menuImg2} source={require('./src/images/menu1.png')} />}
-                  renderSelectedIcon={() => <Image style={styles.menuImg2} source={require('./src/images/menu1.png')} />}
-                  onPress={() => this.setState({ selectedTab: 'payment' })}
-                  >
-                  <Community navigation={this.props.navigation} />
-              </TabNavigator.Item>
-              <TabNavigator.Item
-                  selected={this.state.selectedTab === 'shoppingCart'}
-                  title="vIP会员"
-                  selectedTitleStyle={{color:'#01d6c2'}}
-                  titleStyle={{color:'#999'}}
-                  renderIcon={() => <Image style={styles.menuImg3} source={require('./src/images/menu1.png')} />}
-                  renderSelectedIcon={() => <Image style={styles.menuImg3} source={require('./src/images/menu1.png')} />}
-                  onPress={() => this.setState({ selectedTab: 'shoppingCart' })}>
-                 <Vip navigation={this.props.navigation}  />
-              </TabNavigator.Item>
-            <TabNavigator.Item
-                selected={this.state.selectedTab === 'my'}
-                title="我的"
-                selectedTitleStyle={{color:'#01d6c2'}}
-                titleStyle={{color:'#999'}}
-                renderIcon={() => <Image style={styles.menuImg4} source={require('./src/images/menu1.png')} />}
-                renderSelectedIcon={() => <Image style={styles.menuImg4} source={require('./src/images/menu1.png')} />}
-                onPress={() => this.setState({ selectedTab: 'my' })}>
-                <My  navigation={this.props.navigation} />
-            </TabNavigator.Item>
-         </TabNavigator>
+      <NewPassword navigation={this.props.navigation} />
+    );
+  }
+}
+class Register1Screen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <Register1 navigation={this.props.navigation} />
+    );
+  }
+}
+class RegisterScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <Register navigation={this.props.navigation} />
+    );
+  }
+}
+class SignInScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <SignIn navigation={this.props.navigation} />
+    );
+  }
+}
+class ServiceCenterScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <ServiceCenter navigation={this.props.navigation} />
+    );
+  }
+}
+class MessageDetailScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <MessageDetail navigation={this.props.navigation} />
+    );
+  }
+}
+class HomeScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <Index navigation={this.props.navigation} />
+    );
+  }
+}
+class MessageScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <Message navigation={this.props.navigation} />
+    );
+  }
+}
+class ModifyPasswordScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <ModifyPassword navigation={this.props.navigation} />
+    );
+  }
+}
+class AccountSecurityScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <AccountSecurity navigation={this.props.navigation} />
+    );
+  }
+}
+class NameScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <Name navigation={this.props.navigation} />
+    );
+  }
+}
+class SetScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <Set navigation={this.props.navigation} />
+    );
+  }
+}
+class PersonScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <Person navigation={this.props.navigation} />
     );
   }
 }
@@ -97,6 +174,16 @@ class AllOrderScreen extends Component<Props> {
   render() {
     return (
       <AllOrder navigation={this.props.navigation} />
+    );
+  }
+}
+class GoodsDetailScreen extends Component<Props> { 
+  static navigationOptions = {
+    header:null
+  };
+  render() {
+    return (
+      <GoodsDetail navigation={this.props.navigation} />
     );
   }
 }
@@ -180,8 +267,46 @@ class PayToVipScreen extends Component<Props> {
     );
   }
 }
-
 const RootNavigator = StackNavigator({
+  NewPassword: {
+    screen: NewPasswordScreen,
+  },
+  Register1: {
+    screen: Register1Screen,
+  },
+  Register: {
+    screen: RegisterScreen,
+  },
+  SignIn: {
+    screen: SignInScreen,
+  },
+  ServiceCenter: {
+    screen: ServiceCenterScreen,
+  },
+  MessageDetail: {
+    screen: MessageDetailScreen,
+  },
+  Message: {
+    screen: MessageScreen,
+  },
+  ModifyPassword: {
+    screen: ModifyPasswordScreen,
+  },
+  AccountSecurity: {
+    screen: AccountSecurityScreen,
+  },
+  Name: {
+    screen: NameScreen,
+  },
+  Person: {
+    screen: PersonScreen,
+  },
+  Set: {
+    screen: SetScreen,
+  },
+  GoodsDetail: {
+    screen: GoodsDetailScreen,
+  },
   AllOrder: {
     screen: AllOrderScreen,
   },
@@ -203,14 +328,14 @@ const RootNavigator = StackNavigator({
   VipRegister: {
     screen: VipRegisterScreen,
   },
-  Home: {
-    screen: HomeScreen,
-  },
   Order: {
     screen: OrderScreen,
   },
   Cart: {
     screen: CartScreen,
+  },
+  Home: {
+    screen: HomeScreen,
   },
 });
 export default class App extends React.Component {
@@ -218,25 +343,4 @@ export default class App extends React.Component {
     return <RootNavigator store={store} />;
   }
 }
-const styles = StyleSheet.create({
-  menuImg1: {
-    marginTop:pxToDp(10),
-    width:pxToDp(46),
-    height:pxToDp(44)
-  },
-  menuImg2: {
-    marginTop:pxToDp(10),
-    width:pxToDp(41),
-    height:pxToDp(41)
-  },
-  menuImg3: {
-    marginTop:pxToDp(10),
-    width:pxToDp(54),
-    height:pxToDp(50)
-  },
-  menuImg4: {
-    marginTop:pxToDp(10),
-    width:pxToDp(44),
-    height:pxToDp(48)
-  },
-});
+
